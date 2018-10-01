@@ -179,7 +179,21 @@ class Simulation(object):
             #           - Else:
             #               - Call simulation.interaction(person, random_person)
             #               - Increment interaction counter by 1.
-            pass
+            for i in self.population:
+                if i.infected != None && i.is_alive:
+                    count = 0
+                    dead_count = 0
+                    while count < 100:
+                        person_number = random.randRange(0,len(self.population))
+                        if person_number != i._id:
+                            if self.population[person_number].is_alive:
+                                interaction(i, self.population[person_number])
+                                count += 1
+                            else:
+                                dead_count += 1
+                        if dead_count >= (len(self.population)-100):
+                            count += (len(self.population)-dead_count)
+
 
     def interaction(self, person, random_person):
         # TODO: Finish this method! This method should be called any time two living
