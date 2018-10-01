@@ -85,16 +85,19 @@ class Simulation(object):
         # TODO: Create a Logger object and bind it to self.logger.  You should use this
         # logger object to log all events of any importance during the simulation.  Don't forget
         # to call these logger methods in the corresponding parts of the simulation!
-        self.logger = None
+        self.logger = Logger(self.file_name)
 
         # This attribute will be used to keep track of all the people that catch
         # the infection during a given time step. We'll store each newly infected
         # person's .ID attribute in here.  At the end of each time step, we'll call
         # self._infect_newly_infected() and then reset .newly_infected back to an empty
         # list.
+        self.logger.write_metadata(self.population_size, vacc_percentage, self.virus_name, self.mortality_rate,
+                           self.basic_repro_num)
         self.newly_infected = []
         # TODO: Call self._create_population() and pass in the correct parameters.
         # Store the array that this method will return in the self.population attribute.
+        self.population = _create_population(self.initial_infected)
 
     def _create_population(self, initial_infected):
         # TODO: Finish this method!  This method should be called when the simulation
@@ -164,6 +167,8 @@ class Simulation(object):
         # round of this simulation.  At the end of each iteration of this loop, remember
         # to rebind should_continue to another call of self._simulation_should_continue()!
             self.time_step()
+            time_step_counter += 1
+            self.logger.log_time_step(time_step_counter)
             should_continue = self._simulation_should_continue()
         print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
 
@@ -206,13 +211,24 @@ class Simulation(object):
         # people are selected for an interaction.  That means that only living people
         # should be passed into this method.  Assert statements are included to make sure
         # that this doesn't happen.
-        assert person1.is_alive == True
+        assert person.is_alive == True
         assert random_person.is_alive == True
-        if !random_person.is_vaccinated:
-            random_number = random.randRange(0.00,1.00)
-            if random_number < self.basic_repro_num:
-                self.newly_infected.append(random_person._id)
-            self.logger.log_interaction()
+        if random_person.infected == None:
+            if !random_person.is_vaccinated:
+                random_number = random.randRange(0.00,1.00)
+                if random_number < self.basic_repro_num:
+                    self.newly_infected.append(random_person._id)
+                    self.logger.log_interaction(person, random_person, did_infect=True,
+                                    person2_vacc=False, person2_sick=None)
+                else:
+                    self.logger.log_interaction(person, random_person, did_infect=False,
+                                    person2_vacc=False, person2_sick=None)
+            else:
+                self.logger.log_interaction(person, random_person, did_infect=False,
+                                person2_vacc=True, person2_sick=None)
+        else:
+            self.logger.log_interaction(person, random_person, did_infect=False,
+                            person2_vacc=False, person2_sick=random_person.infected)
         # The possible cases you'll need to cover are listed below:
             # random_person is vaccinated:
             #     nothing happens to random person.
@@ -234,7 +250,7 @@ class Simulation(object):
             for p in self.population:
                 if i == p._id:
                     if !p.infected:
-                        p.infected = True
+                        p.infected = self.virus_name
         self.newly_infected = []
         # For every person id in self.newly_infected:
         #   - Find the Person object in self.population that has this corresponding ID.
