@@ -179,21 +179,27 @@ class Simulation(object):
             #           - Else:
             #               - Call simulation.interaction(person, random_person)
             #               - Increment interaction counter by 1.
-            for i in self.population:
-                if i.infected != None && i.is_alive:
-                    count = 0
-                    dead_count = 0
-                    while count < 100:
-                        person_number = random.randRange(0,len(self.population))
-                        if person_number != i._id:
+        for i in self.population:
+            if i.infected != None && i.is_alive:
+                count = 0 #11
+                dead_count = 0 #3
+                while count < 100: #0 #1
+                    person_number = random.randRange(0,len(self.population))
+                    if person_number != i._id:
+                        if self.population[person_number].is_alive:
+                            interaction(i, self.population[person_number])
+                            count += 1
+                        else:
+                            dead_count += 1
+                    if dead_count >= (len(self.population)-100):
+                        while (dead_count + count) < (len(self.population)-(dead_count+count))-1:
                             if self.population[person_number].is_alive:
                                 interaction(i, self.population[person_number])
                                 count += 1
                             else:
                                 dead_count += 1
-                        if dead_count >= (len(self.population)-100):
-                            count += (len(self.population)-dead_count)
-
+                        count = 100
+        _infect_newly_infected()
 
     def interaction(self, person, random_person):
         # TODO: Finish this method! This method should be called any time two living
@@ -202,7 +208,11 @@ class Simulation(object):
         # that this doesn't happen.
         assert person1.is_alive == True
         assert random_person.is_alive == True
-
+        if !random_person.is_vaccinated:
+            random_number = random.randRange(0.00,1.00)
+            if random_number < self.basic_repro_num:
+                self.newly_infected.append(random_person._id)
+            self.logger.log_interaction()
         # The possible cases you'll need to cover are listed below:
             # random_person is vaccinated:
             #     nothing happens to random person.
@@ -214,13 +224,18 @@ class Simulation(object):
             #     Simulation object's newly_infected array, so that their .infected
             #     attribute can be changed to True at the end of the time step.
         # TODO: Remember to call self.logger.log_interaction() during this method!
-        pass
 
     def _infect_newly_infected(self):
         # TODO: Finish this method! This method should be called at the end of
         # every time step.  This method should iterate through the list stored in
         # self.newly_infected, which should be filled with the IDs of every person
         # created.  Iterate though this list.
+        for i in self.newly_infected:
+            for p in self.population:
+                if i == p._id:
+                    if !p.infected:
+                        p.infected = True
+        self.newly_infected = []
         # For every person id in self.newly_infected:
         #   - Find the Person object in self.population that has this corresponding ID.
         #   - Set this Person's .infected attribute to True.
