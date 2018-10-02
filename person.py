@@ -1,7 +1,8 @@
 import random
-# TODO: Import the virus clase
-#^What virus class? There are only three classes: person, logger, and simulation
-from simulation import Simulation
+from simulation import *
+# from simulation import Simulation
+# from logger import Logger
+
 class Person(object):
     '''
     Person objects will populate the simulation.
@@ -59,7 +60,9 @@ class Person(object):
         if number < self.mortality_rate:
             self.is_alive = False
             return False
-        else if number => self.mortality_rate:
+        elif number >= self.mortality_rate:
             self.is_vaccinated = True
             self.infected = None
             return True
+        else:
+            pass

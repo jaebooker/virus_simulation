@@ -1,8 +1,7 @@
 import random, sys
 random.seed(42)
-from person import Person
-from logger import Logger
-
+from logger import *
+from person import *
 class Simulation(object):
     '''
     Main class that will run the herd immunity simulation program.  Expects initialization
@@ -97,7 +96,7 @@ class Simulation(object):
         self.newly_infected = []
         # TODO: Call self._create_population() and pass in the correct parameters.
         # Store the array that this method will return in the self.population attribute.
-        self.population = _create_population(self.initial_infected)
+        self.population = self._create_population(initial_infected)
 
     def _create_population(self, initial_infected):
         # TODO: Finish this method!  This method should be called when the simulation
@@ -116,7 +115,7 @@ class Simulation(object):
                 population.append(person)
                 infected_count += 1
             else:
-                number = random.randRange(0.00,1.00)
+                number = random.randrange(0.00,1.00)
                 if number < vacc_percentage:
                     person = Person(self.next_person_id, True, infected=None)
                 elif number >= vacc_percentage:
@@ -185,14 +184,14 @@ class Simulation(object):
             #               - Call simulation.interaction(person, random_person)
             #               - Increment interaction counter by 1.
         for i in self.population:
-            if i.infected != None && i.is_alive:
+            if i.infected != None and i.is_alive:
                 count = 0 #11
                 dead_count = 0 #3
                 while count < 100: #0 #1
-                    person_number = random.randRange(0,len(self.population))
+                    person_number = random.randrange(0,len(self.population))
                     if person_number != i._id:
                         if self.population[person_number].is_alive:
-                            interaction(i, self.population[person_number])
+                            self.interaction(i, self.population[person_number])
                             count += 1
                         else:
                             dead_count += 1
@@ -204,7 +203,7 @@ class Simulation(object):
                             else:
                                 dead_count += 1
                         count = 100
-        _infect_newly_infected()
+        self._infect_newly_infected()
 
     def interaction(self, person, random_person):
         # TODO: Finish this method! This method should be called any time two living
@@ -214,7 +213,7 @@ class Simulation(object):
         assert person.is_alive == True
         assert random_person.is_alive == True
         if random_person.infected == None:
-            if !random_person.is_vaccinated:
+            if random_person.is_vaccinated == False:
                 random_number = random.randRange(0.00,1.00)
                 if random_number < self.basic_repro_num:
                     self.newly_infected.append(random_person._id)
@@ -249,7 +248,7 @@ class Simulation(object):
         for i in self.newly_infected:
             for p in self.population:
                 if i == p._id:
-                    if !p.infected:
+                    if p.infected == None:
                         p.infected = self.virus_name
         self.newly_infected = []
         # For every person id in self.newly_infected:

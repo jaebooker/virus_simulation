@@ -1,3 +1,6 @@
+# from simulation import Simulation
+# from person import Person
+
 class Logger(object):
     '''
     Utility class responsible for logging all interactions of note during the
