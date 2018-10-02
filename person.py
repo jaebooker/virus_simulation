@@ -1,7 +1,7 @@
 import random
 from simulation import *
 # from simulation import Simulation
-# from logger import Logger
+from logger import *
 
 class Person(object):
     '''
@@ -52,15 +52,15 @@ class Person(object):
         self.infected = infected
 
 
-    def did_survive_infection():
+    def did_survive_infection(self, mortality_rate):
         # TODO:  Finish this method. Follow the instructions in the class documentation
         # for resolve_infection.  If person dies, set is_alive to False and return False.
         # If person lives, set is_vaccinated = True, infected = None, return True.
-        number = random.randRange(0.00,1.00)
-        if number < self.mortality_rate:
+        number = random.randrange(0,100)
+        if (number / 100) < mortality_rate:
             self.is_alive = False
             return False
-        elif number >= self.mortality_rate:
+        elif (number / 100) >= mortality_rate:
             self.is_vaccinated = True
             self.infected = None
             return True

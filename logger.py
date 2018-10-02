@@ -1,5 +1,5 @@
-# from simulation import Simulation
-# from person import Person
+from simulation import *
+from person import *
 
 class Logger(object):
     '''
