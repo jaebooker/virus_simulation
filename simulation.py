@@ -147,7 +147,7 @@ class Simulation(object):
             print("Everyone has died. The virus has ceased to spread.")
             return False
         elif self.current_infected == 0:
-            print("The virus has ceased to spread. With a population of " + str(len(self.population)-dead_count) + "still alive.")
+            print("The virus has ceased to spread. With a population of " + str(len(self.population)-dead_count) + " still alive.")
             return False
         else:
             print("currently infected: " + str(self.current_infected))
@@ -195,7 +195,7 @@ class Simulation(object):
         for i in self.population:
             if (i.infected == self.virus_name) and (i.is_alive == True):
                 count = 0 #11
-                #dead_count = 0 #3
+                dead_count = 0 #3
                 while count < 100: #0 #1
                     person_number = random.randrange(0,len(self.population))
                     if person_number != i._id:
@@ -203,15 +203,10 @@ class Simulation(object):
                             self.interaction(i, self.population[person_number])
                             count += 1
                         else:
-                            #dead_count += 1
-                            pass
-                    # if dead_count >= (len(self.population)-100):
-                    #     while (dead_count + count) < (len(self.population)-(dead_count+count))-1:
-                    #         if self.population[person_number].is_alive:
-                    #             interaction(i, self.population[person_number])
-                    #             count += 1
-                    #         else:
-                    #             dead_count += 1
+                            dead_count += 1
+                    if dead_count > (len(self.population)-1):
+                        count = 100
+                i.did_survive_infection(self.mortality_rate)
         self._infect_newly_infected()
 
     def interaction(self, person, random_person):
@@ -268,7 +263,6 @@ class Simulation(object):
                         if p.is_alive == True:
                             sickCount += 1
                             p.infected = self.virus_name
-                            p.did_survive_infection(self.mortality_rate)
         self.current_infected = sickCount
         self.total_infected += sickCount
         self.newly_infected = []
