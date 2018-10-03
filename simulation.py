@@ -143,15 +143,15 @@ class Simulation(object):
         for p in self.population:
             if p.is_alive == False:
                 dead_count += 1
-        if self.current_infected == 0:
-            #print("Ebola: You win this round, humanity! But I'll be back! MAHAAHAA!")
+        if (len(self.population)-dead_count) < 2:
+            print("Everyone has died. The virus has ceased to spread.")
             return False
-        elif (len(self.population)-dead_count) < 2:
-            #print("everyone died! The end!")
+        elif self.current_infected == 0:
+            print("The virus has ceased to spread. With a population of " + str(len(self.population)-dead_count) + "still alive.")
             return False
         else:
-            print(self.current_infected)
-            print(len(self.population)-dead_count)
+            print("currently infected: " + str(self.current_infected))
+            print("population remaining: " + str(len(self.population)-dead_count))
             return True
 
     def run(self):
@@ -178,7 +178,7 @@ class Simulation(object):
             #self.logger.log_time_step(time_step_counter)
             should_continue = self._simulation_should_continue()
         #print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
-        print("It is over, after " + str(time_step_counter))
+        print("It is over, after " + str(time_step_counter) + " time steps.")
 
     def time_step(self):
         # TODO: Finish this method!  This method should contain all the basic logic
@@ -193,27 +193,25 @@ class Simulation(object):
             #               - Call simulation.interaction(person, random_person)
             #               - Increment interaction counter by 1.
         for i in self.population:
-            if i.infected != None and i.is_alive:
+            if (i.infected == self.virus_name) and (i.is_alive == True):
                 count = 0 #11
-                dead_count = 0 #3
+                #dead_count = 0 #3
                 while count < 100: #0 #1
                     person_number = random.randrange(0,len(self.population))
                     if person_number != i._id:
-                        if self.population[person_number].is_alive:
+                        if self.population[person_number].is_alive == True:
                             self.interaction(i, self.population[person_number])
                             count += 1
                         else:
-                            dead_count += 1
-                    if dead_count >= (len(self.population)-100):
-                        while (dead_count + count) < (len(self.population)-(dead_count+count))-1:
-                            if self.population[person_number].is_alive:
-                                interaction(i, self.population[person_number])
-                                count += 1
-                            else:
-                                dead_count += 1
-                        count = 100
-        self.current_infected = len(self.newly_infected)
-        self.total_infected += len(self.newly_infected)
+                            #dead_count += 1
+                            pass
+                    # if dead_count >= (len(self.population)-100):
+                    #     while (dead_count + count) < (len(self.population)-(dead_count+count))-1:
+                    #         if self.population[person_number].is_alive:
+                    #             interaction(i, self.population[person_number])
+                    #             count += 1
+                    #         else:
+                    #             dead_count += 1
         self._infect_newly_infected()
 
     def interaction(self, person, random_person):
@@ -226,10 +224,13 @@ class Simulation(object):
         if random_person.infected == None:
             if random_person.is_vaccinated == False:
                 random_number = random.randrange(0,100)
-                if (random_number / 100) < self.basic_repro_num:
-                    self.newly_infected.append(random_person._id)
+                if random_person.is_alive == True:
+                    if (random_number / 100) < self.basic_repro_num:
+                        self.newly_infected.append(random_person._id)
                     #self.logger.log_interaction(person, random_person, did_infect=True,
                                     # person2_vacc=False, person2_sick=None)
+                    else:
+                        pass
                 else:
                     pass
                     #self.logger.log_interaction(person, random_person, did_infect=False,
@@ -259,12 +260,17 @@ class Simulation(object):
         # every time step.  This method should iterate through the list stored in
         # self.newly_infected, which should be filled with the IDs of every person
         # created.  Iterate though this list.
+        sickCount = 0
         for i in self.newly_infected:
             for p in self.population:
                 if i == p._id:
                     if p.infected == None:
-                        p.infected = self.virus_name
-                        p.did_survive_infection(self.mortality_rate)
+                        if p.is_alive == True:
+                            sickCount += 1
+                            p.infected = self.virus_name
+                            p.did_survive_infection(self.mortality_rate)
+        self.current_infected = sickCount
+        self.total_infected += sickCount
         self.newly_infected = []
         # For every person id in self.newly_infected:
         #   - Find the Person object in self.population that has this corresponding ID.

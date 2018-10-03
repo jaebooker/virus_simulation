@@ -1,0 +1,1 @@
+Population Size: 1000	 Percentage of Population Vaccinated: 0.0	 Virus: Ebola	 Mortality Rate of Infected: 0.99	 Transmission Rate: 0.99
