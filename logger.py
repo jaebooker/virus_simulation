@@ -76,7 +76,7 @@ class Logger(object):
     def log_interaction(self, person1, person2, did_infect=None,
                         person2_vacc=None, person2_sick=None):
         with open(self.file_name, "a") as f:
-            f.write("Infected: {}\t Contact: {}\t Contact Infected: {}\t Contact Vaccinated: {}\t Viruses Contact Already Infected With: {}\n".format(person1, person2, did_infect, person2_vacc, person2_sick))
+            f.write("Infected: {}\t Contact: {}\t Contact Infected: {}\t Contact Vaccinated: {}\t Viruses Contact Already Infected With: {}\n".format(person1._id, person2._id, did_infect, person2_vacc, person2_sick))
         f.closed
         # TODO: Finish this method.  The Simulation object should use this method to
         # log every interaction a sick individual has during each time step.  This method

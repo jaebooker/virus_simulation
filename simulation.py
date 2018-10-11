@@ -175,7 +175,7 @@ class Simulation(object):
         # to rebind should_continue to another call of self._simulation_should_continue()!
             self.time_step()
             time_step_counter += 1
-            #self.logger.log_time_step(time_step_counter)
+            self.logger.log_time_step(time_step_counter)
             should_continue = self._simulation_should_continue()
         #print('The simulation has ended after {time_step_counter} turns.'.format(time_step_counter))
         print("It is over, after " + str(time_step_counter) + " time steps.")
@@ -222,22 +222,13 @@ class Simulation(object):
                 if random_person.is_alive == True:
                     if (random_number / 100) < self.basic_repro_num:
                         self.newly_infected.append(random_person._id)
-                    #self.logger.log_interaction(person, random_person, did_infect=True,
-                                    # person2_vacc=False, person2_sick=None)
-                    else:
-                        pass
+                    self.logger.log_interaction(person, random_person, did_infect=True, person2_vacc=False, person2_sick=None)
                 else:
-                    pass
-                    #self.logger.log_interaction(person, random_person, did_infect=False,
-                                    # person2_vacc=False, person2_sick=None)
+                    self.logger.log_interaction(person, random_person, did_infect=False, person2_vacc=False, person2_sick=None)
             else:
-                pass
-                #self.logger.log_interaction(person, random_person, did_infect=False,
-                                # person2_vacc=True, person2_sick=None)
+                self.logger.log_interaction(person, random_person, did_infect=False, person2_vacc=True, person2_sick=None)
         else:
-            pass
-            #self.logger.log_interaction(person, random_person, did_infect=False,
-                            # person2_vacc=False, person2_sick=random_person.infected)
+            self.logger.log_interaction(person, random_person, did_infect=False, person2_vacc=False, person2_sick=random_person.infected)
         # The possible cases you'll need to cover are listed below:
             # random_person is vaccinated:
             #     nothing happens to random person.

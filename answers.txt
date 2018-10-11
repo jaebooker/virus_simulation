@@ -1,0 +1,42 @@
+pop_size = 10000
+vacc_percentage = .90
+virus_name = "Ebola"
+mortality_rate = .70
+basic_repro_num = .25
+initial_infected = 10
+8.99% of the population infected
+6,365 of the population killed from infection.
+
+python3 simulation.py 100000 0.90 Ebola 0.70 0.25 10
+currently infected: 10
+population remaining: 100000
+currently infected: 31
+population remaining: 99991
+currently infected: 92
+population remaining: 99965
+currently infected: 221
+population remaining: 99899
+currently infected: 499
+population remaining: 99732
+currently infected: 1131
+population remaining: 99377
+currently infected: 1941
+population remaining: 98601
+currently infected: 2358
+population remaining: 97210
+currently infected: 1662
+population remaining: 95532
+currently infected: 731
+population remaining: 94370
+currently infected: 218
+population remaining: 93852
+currently infected: 70
+population remaining: 93711
+currently infected: 25
+population remaining: 93670
+currently infected: 9
+population remaining: 93651
+currently infected: 2
+population remaining: 93645
+The virus has ceased to spread. With a population of 93644 still alive.
+It is over, after 15 time steps.
