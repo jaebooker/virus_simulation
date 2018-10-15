@@ -206,7 +206,11 @@ class Simulation(object):
                             dead_count += 1
                     if dead_count > (len(self.population)-1):
                         count = 100
-                i.did_survive_infection(self.mortality_rate)
+                did_survive = i.did_survive_infection(self.mortality_rate)
+                if did_survive == True:
+                    self.logger.log_infection_survival(i._id, False)
+                if did_survive == False:
+                    self.logger.log_infection_survival(i._id, True)
         self._infect_newly_infected()
 
     def interaction(self, person, random_person):
